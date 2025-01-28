@@ -1,0 +1,103 @@
+@font-face {
+    font-family: Calculator;
+    src: url(./assets/Calculator.ttf);
+}
+
+@keyframes click {
+    from {
+        transform: translate(0, 0);
+        box-shadow: 4px 4px black;
+    }
+    to {
+        transform: translate(3px, 3px);
+        box-shadow: 0px 0px black;
+    }
+}
+
+.click {
+    animation: 0.25s click ease-out 2 alternate;
+}
+
+#calculator {
+    width: 376px;
+    height: 400px;
+    margin: auto;
+
+    background-color: rgb(84, 84, 84);
+
+    border: 2px solid black;
+    border-radius: 25px;
+    box-shadow: 5px 5px black;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#display {  
+    padding: 0 10px;
+    box-sizing: border-box;
+
+    background: rgb(156, 202, 156);
+    border: 2px solid black;
+    border-radius: 5px;
+    box-shadow: inset 0 0 5px black;
+
+    font-size: 48px;
+    font-family: Calculator, 'Courier New', Courier, monospace;
+    font-weight: bold;
+    letter-spacing: 3px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    width: 80%;
+    height: 70px;
+}
+
+#buttons {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    user-select: none;
+}
+
+#numbers, #operators {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    gap: 12px;
+}
+
+#numbers {
+    width: 60%;
+}
+
+#operators {
+    width: 40%;
+    justify-content: flex-end;
+}
+
+#buttons button {
+    font-size: 20px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    
+    width: 50px;
+    height: 50px;
+    box-shadow: 4px 4px black;
+    
+    border-style: outset;
+    border: none;
+    border-radius: 5px;
+}
+
+#numbers button {
+    color: white;
+    background-color: grey;
+}
+
+#delete, #clear {
+    color: white;
+    background-color: red;
+}
