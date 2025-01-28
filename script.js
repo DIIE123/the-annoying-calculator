@@ -9,6 +9,7 @@ let num2 = 0;
 let operator = "";
 
 // Event Listeners
+// Number Buttons
 function clickNumber(event) {
     event.target.classList.add("click");
     setTimeout(() => event.target.classList.remove("click"), 500);
@@ -21,12 +22,13 @@ function clickNumber(event) {
             event.target.classList.remove("click");
             break;
         default:
-            if (display.textContent.length < MAX_LENGTH) display.textContent += (event.target.id);
+            if (display.textContent.length < MAX_LENGTH) display.textContent += event.target.id.slice(6);
             break;
     }
 }
 numbers.addEventListener("click", clickNumber);
 
+// Operator Buttons
 function clickOperator(event) {
     event.target.classList.add("click");
     setTimeout(() => event.target.classList.remove("click"), 500);
@@ -41,6 +43,9 @@ function clickOperator(event) {
             num2 = 0;
             operator = "";
             break;
+        case "negative":
+            display.textContent *= -1;
+            break;
         case "operators":
             event.target.classList.remove("click");
             break;
@@ -50,6 +55,47 @@ function clickOperator(event) {
     }
 }
 operators.addEventListener("click", clickOperator);
+
+// Keyboard Buttons
+function clickKey(event) {
+    const key = event.key;
+    console.log(key);
+    if (isFinite(key)) {
+        numbers.querySelector("#digit-" + key).click();
+    }
+    else {
+        switch(key) {
+            case ".":
+                numbers.querySelector("#decimal").click();
+                break;
+            case "+":
+                operators.querySelector("#plus").click();
+                break;
+            case "-":
+                operators.querySelector("#minus").click();
+                break;
+            case "*":
+                operators.querySelector("#times").click();
+                break;
+            case "/":
+                operators.querySelector("#divide").click();
+                break;
+            case "_":
+                operators.querySelector("#negative").click();
+                break;
+            case "Enter":
+                operators.querySelector("#equals").click();
+                break;
+            case "Escape":
+                operators.querySelector("#clear").click();
+                break;
+            case "Backspace":
+                operators.querySelector("#delete").click();
+                break;
+        }
+    }
+}
+document.addEventListener("keydown", clickKey);
 
 // Operator Functions
 function add(a, b) {
@@ -66,4 +112,17 @@ function multiply(a, b) {
 
 function divide(a, b) {
     return a / b;
+}
+
+function operate(op, num1, num2) {
+    switch (op) {
+        case "plus":
+            return add(num1, num2);
+        case "minus":
+            return subtract(num1, num2);
+        case "times":
+            return multiply(num1, num2);
+        case "divide":
+            return divide(num1, num2);
+    }
 }
