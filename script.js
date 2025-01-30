@@ -21,7 +21,7 @@ function clickNumber(event) {
 
     switch(event.target.id) {
         case "decimal":
-            if (!numArray[currentIndex].includes(".") && numArray[currentIndex] < MAX_LENGTH) numArray[currentIndex] += ".";
+            if (!numArray[currentIndex].includes(".") && numArray[currentIndex].length < MAX_LENGTH) numArray[currentIndex] += ".";
             break;
         case "numbers":
             event.target.classList.remove("click");
@@ -42,6 +42,9 @@ function clickOperator(event) {
     switch(event.target.id) {
         case "delete":
             if (numArray[currentIndex]) numArray[currentIndex] = numArray[currentIndex].slice(0, -1);
+            while (numArray[currentIndex].length > 0 && !(numArray[currentIndex].at(-1) === ".") && !isFinite(numArray[currentIndex].at(-1))) {
+                numArray[currentIndex] = numArray[currentIndex].slice(0, -1);
+            }
             break;
         case "clear":
             numArray = ["", ""];
@@ -55,9 +58,11 @@ function clickOperator(event) {
             break;
         default:
             if (currentIndex === 1) {
-                const result = "" + operate(operator, numArray[0], numArray[1]);
+                let result = "" + operate(operator, numArray[0], numArray[1]);
+                result = "" + (Number.parseFloat(result).toFixed(2) * 1);
+                if (result.length > MAX_LENGTH) result = "" + Number.parseFloat(result).toExponential(2);
+                
                 numArray = [result, ""];
-                display.textContent = numArray[0];
                 currentIndex = 0;
             }
 
