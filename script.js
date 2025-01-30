@@ -1,13 +1,24 @@
 const display = document.querySelector("#display");
 const numbers = document.querySelector("#numbers");
 const operators = document.querySelector("#operators");
+const textbox = document.querySelector("#textbox");
 
 const MAX_LENGTH = 10;
+
+const startMessages = ["Why are you here? Please go away.",
+                       "Oh, Hi. I was hoping nobody would show up.",
+                       "OMG, I'm so excited to see you! Not.",
+                       ">:(",
+                       "Come on, isn't it your bedtime already?"];
+
 
 let numArray = ["", ""];
 let currentIndex = 0;
 let operator = "";
 let operatorPressed = false;
+let cancel = false;
+
+displayMessage(startMessages);
 
 // Event Listeners
 // Number Buttons
@@ -131,6 +142,27 @@ function clickButton(target) {
         target.classList.remove("click");
         target.disabled = false;
     }, 310);
+}
+
+// Message Functions
+async function displayMessage(arr) {
+    textbox.textContent = "";
+    const length = arr.length;
+    const random = Math.floor(Math.random() * length);
+    const message = arr[random];
+
+    cancel = true;
+    await new Promise(res => setTimeout(res, 50));
+
+    for (let i = 0; i < message.length; i++) {
+        if (i === 0) cancel = false;
+        if (cancel) break;
+
+        char = message.at(i);
+        textbox.textContent += char;
+        await new Promise(res => setTimeout(res, 50));
+    }
+   
 }
 
 // Operator Functions

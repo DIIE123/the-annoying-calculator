@@ -20,6 +20,30 @@
 
 body {
     background-color: rgb(179, 246, 255);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header {
+    width: 100%;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#textbox {
+    max-width: 800px;
+    width: 80%;
+    font-size: 24px;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+main {
+    min-height: 470px;
 }
 
 #calculator {
