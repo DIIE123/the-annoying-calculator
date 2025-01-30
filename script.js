@@ -4,62 +4,83 @@ const operators = document.querySelector("#operators");
 
 const MAX_LENGTH = 10;
 
-let num1 = 0;
-let num2 = 0;
+let numArray = ["", ""];
+let currentIndex = 0;
 let operator = "";
+let operatorPressed = false;
 
 // Event Listeners
 // Number Buttons
 function clickNumber(event) {
-    event.target.classList.add("click");
-    setTimeout(() => event.target.classList.remove("click"), 500);
+    clickButton(event.target);
+
+    if (operatorPressed) {
+        operatorPressed = false;
+        currentIndex = 1;
+    }
 
     switch(event.target.id) {
         case "decimal":
-            if (!display.textContent.includes(".") && display.textContent.length < MAX_LENGTH) display.textContent += ".";
+            if (!numArray[currentIndex].includes(".") && numArray[currentIndex] < MAX_LENGTH) numArray[currentIndex] += ".";
             break;
         case "numbers":
             event.target.classList.remove("click");
             break;
         default:
-            if (display.textContent.length < MAX_LENGTH) display.textContent += event.target.id.slice(6);
+            if (numArray[currentIndex].length < MAX_LENGTH) numArray[currentIndex] += event.target.id.slice(6);
             break;
     }
+
+    display.textContent = numArray[currentIndex];
 }
 numbers.addEventListener("click", clickNumber);
 
 // Operator Buttons
 function clickOperator(event) {
-    event.target.classList.add("click");
-    setTimeout(() => event.target.classList.remove("click"), 500);
+    clickButton(event.target);
 
     switch(event.target.id) {
         case "delete":
-            if (!(display.textContent === "")) display.textContent = display.textContent.slice(0, -1);
+            if (numArray[currentIndex]) numArray[currentIndex] = numArray[currentIndex].slice(0, -1);
             break;
         case "clear":
-            display.textContent = "";
-            num1 = 0;
-            num2 = 0;
+            numArray = ["", ""];
             operator = "";
             break;
         case "negative":
-            display.textContent *= -1;
+            if (numArray[currentIndex]) numArray[currentIndex] = "" + numArray[currentIndex] * -1;
             break;
         case "operators":
             event.target.classList.remove("click");
             break;
         default:
-            operator = event.target.id;
+            if (currentIndex === 1) {
+                const result = "" + operate(operator, numArray[0], numArray[1]);
+                numArray = [result, ""];
+                display.textContent = numArray[0];
+                currentIndex = 0;
+            }
+
+            if (event.target.id == "equals") {
+                operator = "";
+                operatorPressed = false;
+            }
+            else {
+                operator = event.target.id;
+                operatorPressed = true;
+            }
+
             break;
     }
+
+    display.textContent = numArray[currentIndex];
 }
 operators.addEventListener("click", clickOperator);
 
 // Keyboard Buttons
 function clickKey(event) {
     const key = event.key;
-    console.log(key);
+
     if (isFinite(key)) {
         numbers.querySelector("#digit-" + key).click();
     }
@@ -97,6 +118,16 @@ function clickKey(event) {
 }
 document.addEventListener("keydown", clickKey);
 
+// Normal Functions
+function clickButton(target) {
+    target.classList.add("click");
+    target.disabled = true;
+    setTimeout(function() {
+        target.classList.remove("click");
+        target.disabled = false;
+    }, 310);
+}
+
 // Operator Functions
 function add(a, b) {
     return a + b;
@@ -115,6 +146,9 @@ function divide(a, b) {
 }
 
 function operate(op, num1, num2) {
+    num1 *= 1;
+    num2 *= 1;
+
     switch (op) {
         case "plus":
             return add(num1, num2);

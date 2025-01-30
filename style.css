@@ -15,7 +15,7 @@
 }
 
 .click {
-    animation: 0.25s click ease-out 2 alternate;
+    animation: 0.15s click ease-out 2 alternate;
 }
 
 body {
@@ -97,6 +97,11 @@ body {
 #numbers button {
     color: white;
     background-color: grey;
+}
+
+#operators button:not(#delete, #clear) {
+    color: black;
+    background-color: white;
 }
 
 #delete, #clear {   
