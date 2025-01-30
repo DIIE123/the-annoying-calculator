@@ -16,7 +16,7 @@ let numArray = ["", ""];
 let currentIndex = 0;
 let operator = "";
 let operatorPressed = false;
-let cancel = false;
+let cancel;
 
 displayMessage(startMessages);
 
@@ -151,12 +151,15 @@ async function displayMessage(arr) {
     const random = Math.floor(Math.random() * length);
     const message = arr[random];
 
-    cancel = true;
-    await new Promise(res => setTimeout(res, 50));
-
+    // Variables to stop async function when new one is called
+    if (cancel) cancel();
+    let cancelMe = false;
+    cancel = () => {
+      cancelMe = true;
+    }
+    
     for (let i = 0; i < message.length; i++) {
-        if (i === 0) cancel = false;
-        if (cancel) break;
+        if (cancelMe) break;
 
         char = message.at(i);
         textbox.textContent += char;
