@@ -132,3 +132,7 @@ main {
     color: white;
     background-color: red;
 }
+
+footer {
+    font-family: 'Courier New', Courier, monospace;
+}

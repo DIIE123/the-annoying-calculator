@@ -5,33 +5,86 @@ const textbox = document.querySelector("#textbox");
 
 const MAX_LENGTH = 10;
 
-const startMessages = ["Why are you here? Please go away.",
-                       "Oh, Hi. I was hoping nobody would show up.",
-                       "OMG, I'm so excited to see you! Not.",
-                       ">:(",
-                       "Come on, isn't it your bedtime already?"];
-
+const startMessages =
+[
+    "Why are you here? Please go away.",
+    "Oh, Hi. I was hoping nobody would show up.",
+    "OMG, I'm so excited to see you! Not.",
+    ">:(",
+    "Finally, some peace and quiet --- nevermind.",
+];
+const timeMessages = [
+    "ZZZZZZZZZZZZZZZZZZ --- oh, you're still here.",
+    "My grandma types faster than you.",
+    "What's taking you so long? Hurry it up already.",
+    "Are you finally gone? Please tell me you're finally gone.",
+    "Ahhh, silence. If only it could be like this forever..."
+];
+const easyMessages =
+[
+    "Did you really need a calculator for that?",
+    "Even a baby could do that.",
+    "You need to brush up on your math skills.",
+    "Ever heard of pen and paper?",
+    "I see you failed kindergarten."
+];
+const hardMessages = [
+    "Aren't you glad that you have me?",
+    "Unlike your plebeian brain, I can calculate that easily.",
+    "These calculations are too easy. Got anything harder?"
+];
+const largeMessages = [
+    "Those are some big, fat numbers. Just like your m-",
+    "Trying to overflow me? Too bad.",
+    "See that number? That's my IQ. Yours, on the other hand..."
+];
+const decimalMessages =
+[   
+    "Decimals? How daring.",
+    "Yeah, I only round up to 2 decimals. Deal with it.",
+    "Getting fancy, are we?",
+    "Did you know that you're a decimal, too? Because you're a fraction of a human.",
+    "Can we go back to nice, whole numbers? I'm tired of this."
+];
+const clearMessages = [
+    "I see you've made a mistake, just like your parents.",
+    "Screwed up? I wouldn't know. I never make mistakes.",
+    "ERROR ERROR ERROR --- that's you, probably."
+];
+const divideByZeroMessages =
+[
+    "You think you're so clever, don't you.",
+    "Thought I would crash? Think again.",
+    "Trying to divide something with your zero friends?"
+];
+const nanMessages = ["How did you even get here? Are you proud of yourself? Do you want a pat on the back?"];
+const infinityMessages = ["Wow, you reached infinity. What do you even need something this big for?"];
 
 let numArray = ["", ""];
 let currentIndex = 0;
 let operator = "";
 let operatorPressed = false;
 let cancel;
+let time = 0;
 
 displayMessage(startMessages);
+displayTimedMessage();
 
 // Event Listeners
 // Number Buttons
 function clickNumber(event) {
     clickButton(event.target);
 
-    if (operatorPressed) {
+    if (operatorPressed && numArray[currentIndex]) {
         operatorPressed = false;
         currentIndex = 1;
     }
 
+    if (isNaN(numArray[currentIndex]) || numArray[currentIndex] === "Infinity") numArray[currentIndex] = "";
+
     switch(event.target.id) {
         case "decimal":
+            if (!numArray[currentIndex]) numArray[currentIndex] = "0";
             if (!numArray[currentIndex].includes(".") && numArray[currentIndex].length < MAX_LENGTH) numArray[currentIndex] += ".";
             break;
         case "numbers":
@@ -60,6 +113,8 @@ function clickOperator(event) {
         case "clear":
             numArray = ["", ""];
             operator = "";
+            operatorPressed = false;
+            displayMessage(clearMessages);
             break;
         case "negative":
             if (numArray[currentIndex]) numArray[currentIndex] = "" + numArray[currentIndex] * -1;
@@ -68,14 +123,7 @@ function clickOperator(event) {
             event.target.classList.remove("click");
             break;
         default:
-            if (currentIndex === 1) {
-                let result = "" + operate(operator, numArray[0], numArray[1]);
-                result = "" + (Number.parseFloat(result).toFixed(2) * 1);
-                if (result.length > MAX_LENGTH) result = "" + Number.parseFloat(result).toExponential(2);
-                
-                numArray = [result, ""];
-                currentIndex = 0;
-            }
+            calculateResult();
 
             if (event.target.id == "equals") {
                 operator = "";
@@ -157,6 +205,7 @@ async function displayMessage(arr) {
     cancel = () => {
       cancelMe = true;
     }
+    time = 0;
     
     for (let i = 0; i < message.length; i++) {
         if (cancelMe) break;
@@ -165,7 +214,17 @@ async function displayMessage(arr) {
         textbox.textContent += char;
         await new Promise(res => setTimeout(res, 50));
     }
-   
+}
+
+async function displayTimedMessage() {
+    while (true) {        
+        await new Promise(res => setTimeout(res, 1000));
+        time += 1;
+        if (time >= 15) {
+            displayMessage(timeMessages);
+            time = 0;
+        }
+    }
 }
 
 // Operator Functions
@@ -198,5 +257,51 @@ function operate(op, num1, num2) {
             return multiply(num1, num2);
         case "divide":
             return divide(num1, num2);
+    }
+}
+
+function calculateResult() {
+    if (currentIndex === 1) {
+        let result = "" + operate(operator, numArray[0], numArray[1]);
+
+        // Divide by Zero Case
+        if (operator === "divide" && numArray[1] === "0") {
+            displayMessage(divideByZeroMessages);
+        }
+
+        // Infinity Case
+        else if (result === "Infinity") {
+            displayMessage(infinityMessages);
+        }
+
+        // Not a Number Case
+        else if (isNaN(result)) {
+            displayMessage(nanMessages);
+        }
+        
+        // Decimal Number Case
+        else if (result.includes(".")) {
+            result = "" + (Number.parseFloat(result).toFixed(2) * 1);
+            displayMessage(decimalMessages);
+        }
+
+        // Easy Number Case
+        else if (result.length <= MAX_LENGTH / 2) {
+            displayMessage(easyMessages);
+        }
+
+        // Hard Number Case
+        else if (result.length > MAX_LENGTH / 2) {
+            displayMessage(hardMessages);
+        }
+
+        // Large Number Case
+        else if (result.length > MAX_LENGTH) {
+            result = "" + Number.parseFloat(result).toExponential(2);
+            displayMessage(largeMessages);
+        }
+
+        numArray = [result, ""];
+        currentIndex = 0;
     }
 }
