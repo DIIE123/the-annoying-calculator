@@ -290,15 +290,15 @@ function calculateResult() {
             displayMessage(easyMessages);
         }
 
-        // Hard Number Case
-        else if (result.length > MAX_LENGTH / 2) {
-            displayMessage(hardMessages);
-        }
-
         // Large Number Case
         else if (result.length > MAX_LENGTH) {
             result = "" + Number.parseFloat(result).toExponential(2);
             displayMessage(largeMessages);
+        }
+
+        // Hard Number Case
+        else if (result.length > MAX_LENGTH / 2) {
+            displayMessage(hardMessages);
         }
 
         numArray = [result, ""];
