@@ -118,6 +118,7 @@ function clickOperator(event) {
             break;
         case "negative":
             if (numArray[currentIndex]) numArray[currentIndex] = "" + numArray[currentIndex] * -1;
+            if (numArray[currentIndex].length > MAX_LENGTH) numArray[currentIndex] = "" + Number.parseFloat(numArray[currentIndex]).toExponential(2);
             break;
         case "operators":
             event.target.classList.remove("click");
@@ -184,6 +185,9 @@ document.addEventListener("keydown", clickKey);
 
 // Normal Functions
 function clickButton(target) {
+    const clickSound = new Audio("./assets/click.mp3");
+    clickSound.play();
+
     target.classList.add("click");
     target.disabled = true;
     setTimeout(function() {
@@ -209,10 +213,14 @@ async function displayMessage(arr) {
     
     for (let i = 0; i < message.length; i++) {
         if (cancelMe) break;
+        if (i % 2 === 0) {
+            const textSound = new Audio("./assets/text.mp3");
+            textSound.play(); 
+        }
 
         char = message.at(i);
         textbox.textContent += char;
-        await new Promise(res => setTimeout(res, 50));
+        await new Promise(res => setTimeout(res, 40));
     }
 }
 
