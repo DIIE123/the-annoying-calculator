@@ -274,6 +274,7 @@ function calculateResult() {
 
         // Divide by Zero Case
         if (operator === "divide" && numArray[1] === "0") {
+            result = "ZERO ERROR";
             displayMessage(divideByZeroMessages);
         }
 
