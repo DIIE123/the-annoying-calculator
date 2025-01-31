@@ -80,7 +80,7 @@ function clickNumber(event) {
         currentIndex = 1;
     }
 
-    if (isNaN(numArray[currentIndex]) || numArray[currentIndex] === "Infinity") numArray[currentIndex] = "";
+    if (isNaN(numArray[currentIndex]) || numArray[currentIndex] === "Infinity" || numArray[currentIndex] === "-Infinity") numArray[currentIndex] = "";
 
     switch(event.target.id) {
         case "decimal":
@@ -278,7 +278,7 @@ function calculateResult() {
         }
 
         // Infinity Case
-        else if (result === "Infinity") {
+        else if (result === "Infinity" || result === "-Infinity") {
             displayMessage(infinityMessages);
         }
 
